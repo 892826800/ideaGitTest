@@ -22,8 +22,8 @@ public class DeptController {
         List<Dept> depts=deptService.getAllDept();
         return Msg.success().add("depts" ,depts);
     }
-    @RequestMapping("113")
+   @ResponseBody
 public String tsr(){
-        return null;
+        return "123456";
 }
 }
