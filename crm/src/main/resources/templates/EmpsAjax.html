@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<!--suppress ALL-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>STUDY</title>
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script th:src="@{/JS/EmpJS.js}"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-5"><h2>CRM系统</h2></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-8">
+            <button type="button" class="btn btn-primary btn-xs" id="addModalBtn">
+                <span class="glyphicon glyphicon-trash"></span>新增
+            </button>
+            <button type="button" class="btn btn-danger btn-xs" id="delAllBtn">
+                <span class="glyphicon glyphicon-trash"></span>删除
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <table class="table table-hover table-condensed" id="empTable">
+                <thead>
+                <tr class="success">
+                    <th><input type="checkbox" id="checkAll"/></th>
+                    <th>员工姓名</th>
+                    <th>性别</th>
+                    <th>邮箱</th>
+                    <th>部门</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 col-md-offset-2" id="EmpPageInfo">
+        </div>
+        <div class="col-md-6">
+            <ul class="pagination" id="empPageNav">
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- 添加模态框（Modal） -->
+<div class="modal fade" id="empAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加员工</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" id="empForm">
+                    <div class="form-group" id="empNameStatus">
+                        <label for="firstname" class="col-sm-2 control-label">姓名:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="empName" id="emp_Name" placeholder="张三丰">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">性别:</label>
+                        <div class="col-sm-8">
+                            <label class="radio-inline">
+                                <input type="radio" name="empGender" value="M" checked>男
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="empGender" value="F"> 女
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="empEmailStatus">
+                        <label for="lastname" class="col-sm-2 control-label">邮箱:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="email" id="emp_Email"
+                                   placeholder="zhang.@123.com">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname" class="col-sm-2 control-label">所属部门:</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" name="deptId" id="dept_Name">
+
+                            </select>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveBtn">立即添加</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--更新模态框-->
+<div class="modal fade" id="upEmpModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">更新员工</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" id="upEmpForm">
+                    <div class="form-group" id="upEmpNameStatus">
+                        <label for="firstname" class="col-sm-2 control-label">姓名:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="empName" id="upEmp_Name" readonly
+                                   placeholder="张三丰">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">性别:</label>
+                        <div class="col-sm-8" id="upEmp_Gender">
+                            <label class="radio-inline">
+                                <input type="radio" name="empGender" value="M">男
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="empGender" value="F"> 女
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="upEmpEmailStatus">
+                        <label for="lastname" class="col-sm-2 control-label">邮箱:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="email" id="upEmp_Email"
+                                   placeholder="zhang@123.com">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname" class="col-sm-2 control-label">所属部门:</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" name="deptId" id="upDept_Name">
+                                <option value="1">部门A</option>
+                                <option value="2">部门B</option>
+                                <option value="3">部门C</option>
+                                <option value="4">部门D</option>
+                                <option value="5">部门E</option>
+                                <option value="6">部门F</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="editBtn">立即更新</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $("#addModalBtn").click(function () {
+        // 打开用于新增的模态框，并设置属性，点击其他地方时此模态框不会关闭
+      form_empty();
+        getDept();
+        $("#empAddModal").modal({
+            backdrop: "static"
+        });
+    });
+
+    /*校验员工姓名*/
+    $("#emp_Name").change(function () {
+        $("#empNameStatus").removeClass("has-success has-error");
+        $("#empNameStatus div span").remove();
+        validateForm();
+        checkEmpName();
+    });
+
+    /*校验员工邮箱*/
+    $("#emp_Email").change(function () {
+        $("#empEmailStatus").removeClass("has-success has-error");
+        $("#empEmailStatus div span").remove();
+        validateForm();
+    });
+    /*添加*/
+    $("#saveBtn").click(function () {
+        if (validateForm() == false) {
+            return false;
+        }
+        saveEmp();
+    });
+
+    /*点击编辑弹出模态框
+    1、我们是按钮创建之前就绑定了click，所以绑定不上。
+       1）、可以在创建按钮的时候绑定。    2）、绑定点击.live()
+      jquery新版没有live，使用on进行替代*/
+    $(document).on("click", ".editBtn", function () {
+        var empId = $(this).attr("edit-id");
+        getEmp(empId);
+        $("#upEmpModal").modal({
+            backdrop: "static"
+        });
+    });
+    $("#editBtn").click(function () {
+
+        updateEmp();
+    })
+
+    /*单个删除*/
+    $(document).on("click", ".delBtn", function () {
+        var empName = $(this).parents("tr").find("td:eq(1)").text();
+        if (confirm("确认删除【" + empName + "】?")) {
+            var empId=$(this).attr("del-id");
+            deleteEmp(empId);
+        }
+
+    })
+    /*全选全不选*/
+    $("#checkAll").click(function () {
+        $(".check_item").prop("checked", $(this).prop("checked"));
+    });
+    $(document).on("click", ".check_item", function () {
+        //判断当前选择中的元素是否5个
+        var flag = $(".check_item:checked").length == $(".check_item").length;
+        $("#checkAll").prop("checked", flag);
+    });
+    /*全部删除*/
+    $("#delAllBtn").click(function () {
+        //
+        var empNames = "";
+        var del_idstr = "";
+        $.each($(".check_item:checked"), function () {
+            //this
+            empNames += $(this).parents("tr").find("td:eq(1)").text() + ",";
+            //组装员工id字符串
+            del_idstr += $(this).parents("tr").attr("delId")+"-";
+        });
+        //去除empNames多余的,
+        empNames = empNames.substring(0, empNames.length - 1);
+        //去除删除的id多余的-
+        del_idstr = del_idstr.substring(0, del_idstr.length - 1);
+        if (confirm("确认删除【" + empNames + "】吗？")) {
+            //发送ajax请求删除
+            $.ajax({
+                url: "./deleteAllEmp/emp/" + del_idstr,
+                type: "DELETE",
+                success: function (result) {
+                    toPage(currentPage);
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
+
