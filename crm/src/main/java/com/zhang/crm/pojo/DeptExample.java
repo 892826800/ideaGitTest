@@ -5,7 +5,7 @@ import java.util.List;
 
 public class DeptExample {
     protected String orderByClause;
-
+    String a;
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
