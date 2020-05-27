@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequestMapping("/emp")
 public class EmpController {
     @Autowired
     private EmpService empService;
